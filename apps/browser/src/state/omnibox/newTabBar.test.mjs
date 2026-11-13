@@ -144,6 +144,16 @@ test("closing the last tab leaves an empty window whose pick fills it; ⌘W ther
   assert.equal(S().windows[w], undefined);
 });
 
+test("a tab a page opened, still without an address, doesn't get the bar", () => {
+  reset("commandBar");
+  const { w, ids: [a] } = windowWith("a");
+  const opened = S().newTab(w, { adoptId: "ardiacore:7", openerId: a });
+  assert.equal(urlOf(opened), "");
+  assert.equal(S().tabs[opened].page.kind, "adopted");
+  showOnceOverEmptyCard(w, opened);
+  assert.equal(panel(w).open, false, "the page is about to load: no bar over it");
+});
+
 test("⌘T right after the bar opened on its own over an empty window keeps it; the next ⌘T closes it", () => {
   reset("commandBar");
   const { w, ids: [a] } = windowWith("a");
